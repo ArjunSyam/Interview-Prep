@@ -2643,3 +2643,305 @@ Update your Node version
 Keep your Node version configurations separate on a per-project basis
 
 It's kinda like pyenv for Python, if you're familiar with that.
+
+NPM
+Now that you've got node working, its important to understand that... you probably won't use it directly very often. Instead, you'll use npm (Node Package Manager) to install and manage packages.
+
+npm is a package manager for JavaScript. It's the world's largest software registry, with over 1.3 million packages of code. It's the home of many useful libraries such as:
+
+is-even
+
+cowsay
+
+left-pad
+
+If you're familiar with Python, npm is similar to pip or uv. If you're familiar with Go, npm is similar to go get
+
+DOM
+Look, this isn't a front-end specific JavaScript course (in fact, it's not even back-end specific), it's a language course. But it's impossible to talk about JavaScript without mentioning its original use case: doing fancy stuff in the browser.
+
+The DOM (Document Object Model) is just an in-memory representation of an HTML document, you know, the thing that front-end developers suffer through working with on a daily basis. If you've built our static site generator project, you kinda built a DOM from scratch when you converted your markdown into in-memory nodes.
+
+Okay So What's It Look Like?
+Let's pretend we have this super cool HTML file that represents a homepage:
+
+<html>
+  <head>
+    <title>Princess Mononoke Fan Club</title>
+  </head>
+
+  <body>
+    <h1 id="mainHeading">A Fan Club for Mononoke Enjoyers</h1>
+    <p>
+      Join us in riveting discussion about the philosophical truths and untruths
+      revealed in the greatest metaphor of modern times.
+    </p>
+    <p>Every Tuesday at 7pm EST.</p>
+    <button id="joinButton">Join the Fun</button>
+  </body>
+</html>
+
+When this HTML file is loaded into a browser, the browser creates a DOM in memory that our JavaScript code can interact with through a global object called document. For example, let's say I wanted to change the text of the <h1> (header) and the style of the <p> (paragraph) elements when a user clicks the "Join the Fun" button.
+
+First, I need to define a function that will be called when the button is clicked:
+
+function onJoinClick() {
+  // ...
+}
+
+Inside the function, I can access the h1 element by the id attribute that I gave it and change its text content:
+
+function onJoinClick() {
+  document.getElementById("mainHeading").textContent = "Welcome to the Club!";
+}
+
+Next, let's say I want to change the color of the text in the paragraph. I can access all the p elements and change their style properties:
+
+function onJoinClick() {
+  document.getElementById("mainHeading").textContent = "Welcome to the Club!";
+  const paragraphs = document.getElementsByTagName("p");
+  for (const p of paragraphs) {
+    p.style.color = "red";
+  }
+}
+
+Finally, I need to register the function to be called when the button is clicked by adding an event listener:
+
+document.getElementById("joinButton").addEventListener("click", onJoinClick);
+
+Now, when the user clicks the "Join the Fun" button, the text of the header will change to "Welcome to the Club!" and the color of the paragraphs will change to red.
+
+ECMAScript
+ECMAScript??? I thought we were learning JavaScript!
+
+Well, we are. ECMAScript is the standard that JavaScript is based on. Brendan Eich, the creator of JavaScript, tastefully commented on the name:
+
+"ECMAScript was always an unwanted trade name that sounds like a skin disease."
+
+Its purpose is to help JavaScript (and other languages) maintain compatibility across different runtimes. ECMAScript versions are released yearly, and they have a big impact on how we write modern JavaScript. Some notable versions include:
+
+2009: ECMAScript 5 (ES5) introduced strict mode and JSON support
+
+2015: ECMAScript 6 (ES6) introduced let and const for variable declarations
+
+2017: ECMAScript 8 (ES8) introduced async/await
+
+Polyfills and Transpilers
+Most programming languages change over the years. The update from Python 2 to Python 3, for example, is a famous example of an insane amount of breaking changes that caused many a Python developer to lose more sleep and hair than they would have liked.
+
+JavaScript has also changed a lot over the years, but the interesting thing about being a language that primarily runs in a web browser is that you don't always control the runtime. If you're running Python (or JS, or anything) on a server, then you can update your code, and at the same time update your runtime, or compiler, or interpreter. With frontend JavaScript, you're at the mercy of whatever mix of out-of-date browsers your users are running.
+
+Enter polyfills and transpilers.
+
+A polyfill is an extra bit of code you include to add functionality that some browsers might not support. For example, maybe Chrome allows you to use the fancy new Array.prototype.flat() method, but Internet Explorer 11 doesn't. You can include a polyfill (just some extra JavaScript code) that adds that method to the Array prototype so that your code works in both browsers.
+
+A transpiler (in the context of adding new JavaScript features) is basically a polyfill on steroids. Instead of just adding a method here or a property there, a transpiler will take your entire JavaScript file and convert it into an older version of JavaScript that is known to work in all browsers. For example, it might take your fancy async and await keywords and convert them into a bunch of Promise objects and .then() calls. Babel is the most popular transpiler for JavaScript.
+
+
+Polyfills and Transpilers
+Most programming languages change over the years. The update from Python 2 to Python 3, for example, is a famous example of an insane amount of breaking changes that caused many a Python developer to lose more sleep and hair than they would have liked.
+
+JavaScript has also changed a lot over the years, but the interesting thing about being a language that primarily runs in a web browser is that you don't always control the runtime. If you're running Python (or JS, or anything) on a server, then you can update your code, and at the same time update your runtime, or compiler, or interpreter. With frontend JavaScript, you're at the mercy of whatever mix of out-of-date browsers your users are running.
+
+Enter polyfills and transpilers.
+
+A polyfill is an extra bit of code you include to add functionality that some browsers might not support. For example, maybe Chrome allows you to use the fancy new Array.prototype.flat() method, but Internet Explorer 11 doesn't. You can include a polyfill (just some extra JavaScript code) that adds that method to the Array prototype so that your code works in both browsers.
+
+A transpiler (in the context of adding new JavaScript features) is basically a polyfill on steroids. Instead of just adding a method here or a property there, a transpiler will take your entire JavaScript file and convert it into an older version of JavaScript that is known to work in all browsers. For example, it might take your fancy async and await keywords and convert them into a bunch of Promise objects and .then() calls. Babel is the most popular transpiler for JavaScript.
+
+Modules
+Back in the earliest days of JavaScript - when it was but a wee browser-only language that looked like bastardized Java - JavaScript files were small. A callback here, a dynamic element there, and a sprinkle of (gasp) jQuery to make it all work.
+
+But as the web has grown, we're not just shipping a bit of interactivity to static HTML pages anymore. We're building full-fledged applications with crazy amounts of state, logic, and dependencies. In the case of single page applications, sometimes HTML is just a shell that gets filled in with JavaScript at runtime.
+
+Long story short, JS needed modules. In Go, you have packages. In Python, you have modules. Now, JavaScript also has modules - they're just a way to split your code into separate files and import the code you need across a large codebase.
+
+Modules in JavaScript exist at the file level, just like Python. So, if you have a file called math.js that looks like this:
+
+// math.js
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+
+module.exports = {
+  add,
+  subtract,
+};
+
+You can import and use those functions in another file like this:
+
+// main.js
+const { add, subtract } = require("./math.js");
+
+console.log(add(1, 2)); // 3
+console.log(subtract(1, 2)); // -1
+
+This is CommonJS syntax. I'll explain what that means soon.
+
+CommonJS
+So we've started with the less preferred way of doing modules in JavaScript: CommonJS. CommonJS is a module system that was created for Node.js before the new ES6 module syntax was introduced. It's still used in Node.js today, but ever since Node added support for ES6 modules, it's become less common. (heh, get it?)
+
+CommonJS is Node.js specific, you can't use it in the browser without some kind of bundler, which we'll talk about in a bit. The defining features of CommonJS are:
+
+The module.exports object, which is used to export stuff
+
+The require function, which is used to import stuff
+
+Exporting
+// math.js
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+
+module.exports = {
+  add,
+  subtract,
+};
+
+Importing
+// main.js
+const { add, subtract } = require("./math.js");
+
+console.log(add(1, 2)); // 3
+console.log(subtract(1, 2)); // -1
+
+Strict Mode
+JavaScript is a loosey-goosey language, as we've learned. As such, it's easy to make mistakes that are hard to catch until a user is emailing you a bug report.
+
+Strict Mode is a way to opt-in to a more restrictive set of rules that help you catch errors earlier. It was introduced in ES5. Some of the big differences between strict mode and "normal" (sloppy) JavaScript are:
+
+Eliminates some silent errors by throwing them
+
+Fixes some mistakes that make it difficult for JS engines to optimize code. Strict mode code can sometimes run faster than identical code that's not in strict mode.
+
+Prohibits some syntax likely to be defined in future versions of ECMAScript
+
+this is undefined inside a function that's called without an object, instead of being the global object
+
+Long story short, when possible, strict mode is a good idea.
+
+To enable strict mode, you just need to "use strict" at the top of your file:
+
+"use strict";
+
+// your code here
+
+You can also enable strict mode for a single function:
+
+function strictFunction() {
+  "use strict";
+  // your code here
+}
+
+Strict Mode in Modules
+Here's the best part: you only need "use strict"; at the top of non-es6 modules. ES6 modules, which we will learn next, are always in strict mode by default. That goes for the browser and Node.js.
+
+We'll go more in-depth on Node and browser modules in a moment.
+
+ES6 Modules
+ES6 modules are the preferred way of doing modules in JavaScript. They're (now) built into the language and are supported in modern browsers and Node.js. That said, there are still some gotchas to be aware of... which we'll cover.
+
+The Syntax
+The syntax for ES6 modules is drop-dead simple. You can export stuff from a module using the export keyword, and import stuff using the import keyword. Let's look at our math example again:
+
+Exporting
+// math.js
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+
+Importing
+// main.js
+import { add, subtract } from "./math.js";
+
+console.log(add(1, 2)); // 3
+console.log(subtract(1, 2)); // -1
+
+Node.js Modules
+By default, Node.js uses the CommonJS syntax for modules. There are two ways you can manually switch to ES6 module syntax:
+
+Add "type": "module" to the top-level object in your package.json file
+
+Rename your module files to .mjs instead of .js
+
+Personally, I prefer the first option. It's cleaner and easier to manage. And remember, if you're not using ES6 modules, your code will not be in strict mode by default!
+
+Browser Modules
+Modern browsers now support ES6 modules, but there are a few things to be aware of. If your HTML has "normal" old script tags, those scripts will not be treated as modules. They will execute one after the other, in the order they appear in the HTML file.
+
+<script src="meFirst.js"></script>
+<script src="meSecond.js"></script>
+
+If you want to use ES6 modules, you need to use the type="module" attribute on your script tags.
+
+<script type="module" src="math.js"></script>
+<script type="module" src="main.js"></script>
+
+Modules have a few great advantages:
+
+Stuff defined in a module is not in the global scope. To be accessed from another module, it must be exported.
+
+Modules are deferred by default, meaning they only run after the document has been parsed.
+
+Strict mode is enabled by default. Yay!
+
+Default Exports
+There's one last itty-bitty piece of syntax that you'll encounter when working with modules: default exports.
+
+Default exports are often used when you want to export a single value from a module. Let's take our math.js example one last time:
+
+// math.js
+
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+
+// main.js
+
+import { add, subtract } from "./math.js";
+
+This exports two functions. Sometimes, a developer will want to just export one thing, so they can do this:
+
+// math.js
+
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+
+export default add;
+
+Then when it's imported, you don't need to use the curly braces:
+
+// main.js
+
+import add from "./math.js"; // no curly braces
+
+You can even have default and named exports:
+
+// math.js
+
+export const subtract = (a, b) => a - b; // named export
+
+const add = (a, b) => a + b;
+export default add; // default export
+
+Though you normally wouldn't do that...
+
+Should I Use Default Exports?
+Honestly... I kinda hate them. What if I want to export more things later? Now I have to refactor all of my imports and exports. It's a pain.
+
+My personal preference is to just pretend default exports don't exist, and always use named exports.
+
+Bundlers
+Bundlers are tools that allow you to write code in a modular and easy-to-manage way, and then bundle it in a way that's optimized for production. For example, you probably want a giant front-end application to exist in your codebase as many hundreds of files, but you want to serve it to your visitors as a single file or one file per page.
+
+The point is, a bundler takes care of transforming your code from how you're writing it to how you want it to be served. That said, popular bundlers often do a whole suite of important things, like:
+
+Bundling: Duh, we just covered this.
+
+Minification: Making your code smaller by removing unnecessary whitespace (useful when you have to serve your code to a browser via a slow connection).
+
+Code Splitting: Breaking your code into smaller chunks that can be loaded on-demand.
+
+Tree Shaking: Removing unused code from your final bundle.
+
+Asset Optimization: Optimizing images, fonts, and other assets. For example, converting images to WebP format or reducing their size.
+
+Source Maps: building files that allow you to debug your code in the browser as if it were still in its original form.
+
+For a long time, Webpack was the most popular bundler. It's still used, but Vite has been gaining a lot of traction lately. Vite is often quite a bit faster than Webpack, and it's also much easier to configure in my opinion. It's built on top of (and adds more features to) Rollup, which is another popular bundler.
